@@ -3,14 +3,12 @@ package com.example.spontan.classes;
 import com.example.spontan.DAO.UserDAO;
 import com.example.spontan.DTO.UserDTO;
 import com.example.spontan.entity.User;
-import com.example.spontan.mappers.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class Main implements UserMapper{
+public class Main {
     private UserDAO userDAO;
 
     public Main(UserDAO userDAO) {
@@ -28,7 +26,6 @@ public class Main implements UserMapper{
         return UserToDto(user1).getName() + " " + UserToDto(user1).getEmail();
     }
 
-    @Override
     public UserDTO UserToDto(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getName());
