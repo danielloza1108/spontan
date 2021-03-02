@@ -11,16 +11,17 @@ import java.util.UUID;
 @Entity
 public class Category implements Serializable {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    private String uuid = UUID.randomUUID().toString();
+    private final String uuid = UUID.randomUUID().toString();
 
     @Override
     public boolean equals(Object o) {
         return this == o || o instanceof Category &&
-                Objects.equals(uuid,((Category) o).uuid);
+                Objects.equals(uuid, ((Category) o).uuid);
     }
 
     @Override

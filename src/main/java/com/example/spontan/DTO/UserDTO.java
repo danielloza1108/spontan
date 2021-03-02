@@ -6,7 +6,6 @@ public class UserDTO {
     private String email;
 
 
-
     public String getName() {
         return name;
     }
