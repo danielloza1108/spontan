@@ -5,7 +5,6 @@ import com.example.spontan.DTO.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.UserAlreadyInDBException;
 import com.example.spontan.exception.UserIsNotInTheBase;
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -13,8 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -86,6 +84,16 @@ public class UserService {
         users1.add(userDAO.findByEmail(userEmail));
         user1.setFriends(users1);
         userDAO.save(user1);
+    }
+    @Transactional
+    public List<Long> getFriendsId(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String email = jsonObject.getString("email");
+        if(userDAO.findByEmail(email) == null){
+            throw new UserIsNotInTheBase("No user in the base");
+        }
+        List<Long> usersId = userDAO.findFriendsById(userDAO.findByEmail(email).getId());
+        return usersId;
     }
 
 }

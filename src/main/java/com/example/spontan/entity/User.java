@@ -14,7 +14,7 @@ public class User {
     private String email;
 
     private String password;
-    @OneToMany
+    @ManyToMany
     private List<User> friends;
 
     public User() {

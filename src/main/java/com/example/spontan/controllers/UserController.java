@@ -4,11 +4,12 @@ package com.example.spontan.controllers;
 import com.example.spontan.DTO.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.service.UserService;
-import com.fasterxml.jackson.databind.node.TextNode;
 import org.json.JSONException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -57,6 +58,16 @@ public class UserController {
     public ResponseEntity<String> addFriend(@RequestBody String jsonUserEmailAndFriendEmail) throws JSONException {
         userService.addFriend(jsonUserEmailAndFriendEmail);
         return ResponseEntity.ok("Success");
+    }
+
+    /*
+    {
+        "email": "sth"
+    }
+     */
+    @GetMapping(value = "/getFriendsId", produces=MediaType.APPLICATION_JSON_VALUE)
+    public List<Long> getFriends(@RequestBody String jsonEmail) throws JSONException {
+        return userService.getFriendsId(jsonEmail);
     }
 
 }
