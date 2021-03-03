@@ -1,4 +1,4 @@
-package com.example.spontan.DAO;
+package com.example.spontan.dao;
 
 import com.example.spontan.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +14,5 @@ public interface UserDAO extends JpaRepository<User, Long> {
     List<Long> findFriendsById(@Param("id") Long id);
 
     User getUserById(Long id);
-
 
 }
