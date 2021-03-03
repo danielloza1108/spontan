@@ -1,6 +1,6 @@
 package com.example.spontan.service;
 
-import com.example.spontan.DAO.EventDAO;
+import com.example.spontan.dao.EventDAO;
 import com.example.spontan.entity.Event;
 import com.example.spontan.exception.EventNotExistException;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,10 @@ public class EventService {
         eventDAO.save(event);
     }
 
-    @Transactional
     public void deleteEvent(Event event){
-        if(eventDAO.f)
+
     }
+
 
     public void checkEventCollides(Event event, Event event1) {
         if(event1.getEventStart().compareTo(event.getEventStart()) == 0){

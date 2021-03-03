@@ -1,7 +1,7 @@
 package com.example.spontan.controllers;
 
 
-import com.example.spontan.DTO.UserDTO;
+import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.service.UserService;
 import org.json.JSONException;

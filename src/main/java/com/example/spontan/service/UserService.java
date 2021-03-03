@@ -1,7 +1,7 @@
 package com.example.spontan.service;
 
-import com.example.spontan.DAO.UserDAO;
-import com.example.spontan.DTO.UserDTO;
+import com.example.spontan.dao.UserDAO;
+import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.UserAlreadyInDBException;
 import com.example.spontan.exception.UserIsNotInTheBaseException;
