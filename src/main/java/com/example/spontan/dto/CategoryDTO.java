@@ -1,4 +1,4 @@
-package com.example.spontan.DTO;
+package com.example.spontan.dto;
 
 public class CategoryDTO {
 
