@@ -1,9 +1,7 @@
 package com.example.spontan.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -16,16 +14,26 @@ public class User {
     private String email;
 
     private String password;
+    @OneToMany
+    private List<User> friends;
 
     public User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, List<User> friends) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.friends = friends;
     }
 
+    public List<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
 
     public Long getId() {
         return id;

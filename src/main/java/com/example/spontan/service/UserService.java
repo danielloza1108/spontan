@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -52,6 +54,27 @@ public class UserService {
         User user = userDAO.findByEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         userDAO.save(user);
+    }
+
+    @Transactional
+    public void addFriend(String userEmail, String friendEmail){
+        if(userDAO.findByEmail(userEmail) == null){
+            throw new UserIsNotInTheBase("No user in the base");
+        }else if(userDAO.findByEmail(friendEmail) == null){
+            throw new UserIsNotInTheBase("No friend in the base");
+        }
+        //For user
+        User user = userDAO.findByEmail(userEmail);
+        List<User> users = user.getFriends();
+        users.add(userDAO.findByEmail(friendEmail));
+        user.setFriends(users);
+        userDAO.save(user);
+        //For friend
+        User user1 = userDAO.findByEmail(friendEmail);
+        List<User> users1 = user1.getFriends();
+        users1.add(userDAO.findByEmail(userEmail));
+        user1.setFriends(users1);
+        userDAO.save(user1);
     }
 
 }

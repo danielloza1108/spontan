@@ -35,4 +35,10 @@ public class UserController {
         return ResponseEntity.ok("Success");
     }
 
+    @PostMapping(value = "/addFriend/{userEmail}/{friendEmail}")
+    public ResponseEntity<String> addFriend(@PathVariable String userEmail, @PathVariable String friendEmail){
+        userService.addFriend(userEmail,friendEmail);
+        return ResponseEntity.ok("Success");
+    }
+
 }
