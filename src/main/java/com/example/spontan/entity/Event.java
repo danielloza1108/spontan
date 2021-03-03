@@ -3,10 +3,7 @@ package com.example.spontan.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,7 +14,6 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private final String uuid = UUID.randomUUID().toString();
 
     private String name;
@@ -25,23 +21,19 @@ public class Event {
     private Integer quantityOfPlayers;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime eventStart;
-    private Long organizerId;
+
     private String place;
     @JsonProperty(value = "duration")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime durationOfTheEvent;
+    @ManyToOne
+    private Category category;
+    @ManyToOne
+    private User user;
 
-    public Event(String name, Integer quantityOfPlayers, LocalDateTime eventStart, Long organizerId, String place, LocalDateTime durationOfTheEvent) {
-        this.name = name;
-        this.quantityOfPlayers = quantityOfPlayers;
-        this.eventStart = eventStart;
-        this.organizerId = organizerId;
-        this.place = place;
-        this.durationOfTheEvent = durationOfTheEvent;
-    }
+
 
     public Event() {
-
     }
 
     @Override
@@ -55,6 +47,8 @@ public class Event {
         return Objects.hash(uuid);
     }
 
+
+
     public LocalDateTime getDurationOfTheEvent() {
         return durationOfTheEvent;
     }
@@ -63,8 +57,20 @@ public class Event {
         this.durationOfTheEvent = durationOfTheEvent;
     }
 
-    public void setOrganizerId(Long organizerId) {
-        this.organizerId = organizerId;
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getPlace() {
@@ -105,10 +111,6 @@ public class Event {
 
     public void setEventStart(LocalDateTime eventStart) {
         this.eventStart = eventStart;
-    }
-
-    public Long getOrganizerId() {
-        return organizerId;
     }
 
 }
