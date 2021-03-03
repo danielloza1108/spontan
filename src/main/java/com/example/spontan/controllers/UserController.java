@@ -25,21 +25,37 @@ public class UserController {
         userService.saveUser(user);
         return ResponseEntity.ok("Success");
     }
-
-    @GetMapping(value = "/get")
-    public UserDTO getUser(@RequestBody String json) throws JSONException {
-        return userService.getUserByEmail(json);
+    //In get, edit and addFriend use JSON format like:
+    /*
+    {
+        "email" : "sth"
     }
-
+     */
+    @GetMapping(value = "/get")
+    public UserDTO getUser(@RequestBody String jsonEmail) throws JSONException {
+        return userService.getUserByEmail(jsonEmail);
+    }
+    /*
+    {
+        "email": "sth",
+        "password": "sth"
+    }
+     */
     @PostMapping(value = "/edit")
-    public ResponseEntity<String> editPassword(@RequestBody String json) throws JSONException {
-        userService.editPassword(json);
+    public ResponseEntity<String> editPassword(@RequestBody String jsonEmailAndPassword) throws JSONException {
+        userService.editPassword(jsonEmailAndPassword);
         return ResponseEntity.ok("Success");
     }
 
+    /*
+    {
+        "userEmail": "sth",
+        "friendEmail": "sth"
+    }
+     */
     @PostMapping(value = "/addFriend")
-    public ResponseEntity<String> addFriend(@RequestBody String json) throws JSONException {
-        userService.addFriend(json);
+    public ResponseEntity<String> addFriend(@RequestBody String jsonUserEmailAndFriendEmail) throws JSONException {
+        userService.addFriend(jsonUserEmailAndFriendEmail);
         return ResponseEntity.ok("Success");
     }
 
