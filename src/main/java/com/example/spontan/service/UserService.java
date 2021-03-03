@@ -44,8 +44,7 @@ public class UserService {
           throw new UserIsNotInTheBaseException("No user in the base" + email);
         }
         User user = userDAO.findByEmail(email);
-        UserDTO userDTO = modelMapper.map(user,UserDTO.class);
-        return userDTO;
+        return modelMapper.map(user,UserDTO.class);
 
     }
 
@@ -85,15 +84,26 @@ public class UserService {
         user1.setFriends(users1);
         userDAO.save(user1);
     }
-    @Transactional
+
     public List<Long> getFriendsId(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
         String email = jsonObject.getString("email");
         if(userDAO.findByEmail(email) == null){
             throw new UserIsNotInTheBaseException("No user in the base");
         }
-        List<Long> usersId = userDAO.findFriendsById(userDAO.findByEmail(email).getId());
-        return usersId;
+        return userDAO.findFriendsById(userDAO.findByEmail(email).getId());
     }
 
+
+    public UserDTO getUserById(String json) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject(json);
+        String userId = jsonObject.getString("userId");
+        UserDTO userDTO = modelMapper.map(userDAO.getUserById(Long.parseLong(userId)), UserDTO.class);
+        if(userDTO == null) {
+            throw new UserIsNotInTheBaseException("No user in the base");
+        }
+
+        return userDTO;
+    }
 }
