@@ -4,7 +4,7 @@
         on-profile: rafal
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/spontan?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/spontan?useSSL=false&serverTimezone=Europe/Warsaw&allowPublicKeyRetrieval=true
       username: root
       password: sakesake1
       initialization-mode: always
@@ -29,7 +29,7 @@
         on-profile: daniel
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/spontan?serverTimezone=UTC&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/spontan?serverTimezone=Europe/Warsaw&allowPublicKeyRetrieval=true
       username: root
       password: coderslab
       initialization-mode: always

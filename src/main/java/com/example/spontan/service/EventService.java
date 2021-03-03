@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Service
@@ -20,11 +24,28 @@ public class EventService {
 
     @Transactional
     public void addEvent(Event event){
-        if(eventDAO.findByPlace(event.getPlace()) != null){
+        if(eventDAO.findEventsByPlace(event.getPlace()) != null){
             List<Event> events = eventDAO.findEventsByPlace(event.getPlace());
             for (Event event1 : events) {
                 if(event1.getEventStart().compareTo(event.getEventStart()) == 0){
                     throw new EventNotExist("Another event on this place in this date");
+                }else if(event1.getEventStart().compareTo(event.getEventStart()) < 0){
+                    LocalDateTime localDateTime = event1.getEventStart();
+                    localDateTime = localDateTime.plusHours(event1.getDurationOfTheEvent().getHour());
+                    localDateTime = localDateTime.plusMinutes(event1.getDurationOfTheEvent().getMinute());
+                    if(localDateTime.compareTo(event.getEventStart()) > 0){
+                        System.out.println(localDateTime);
+                        throw new EventNotExist("The event collides with previous event");
+                    }
+
+                }else if(event1.getEventStart().compareTo(event.getEventStart()) > 0){
+                    LocalDateTime localDateTime = event.getEventStart();
+                    localDateTime = localDateTime.plusHours(event.getDurationOfTheEvent().getHour());
+                    localDateTime = localDateTime.plusMinutes(event.getDurationOfTheEvent().getMinute());
+                    if(localDateTime.compareTo(event1.getEventStart()) > 0){
+                        System.out.println(localDateTime);
+                        throw new EventNotExist("The event collides with next event");
+                    }
                 }
             }
 

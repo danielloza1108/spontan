@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Event {
@@ -19,21 +19,33 @@ public class Event {
     private String name;
     @JsonProperty(value = "quantity")
     private Integer quantityOfPlayers;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
-    private Date eventStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
+    private LocalDateTime eventStart;
     private Long organizerId;
     private String place;
+    @JsonProperty(value = "duration")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
+    private LocalDateTime durationOfTheEvent;
 
-    public Event(String name, Integer quantityOfPlayers, Date eventStart, Long organizerId, String place) {
+    public Event(String name, Integer quantityOfPlayers, LocalDateTime eventStart, Long organizerId, String place, LocalDateTime durationOfTheEvent) {
         this.name = name;
         this.quantityOfPlayers = quantityOfPlayers;
         this.eventStart = eventStart;
         this.organizerId = organizerId;
         this.place = place;
+        this.durationOfTheEvent = durationOfTheEvent;
     }
 
     public Event() {
 
+    }
+
+    public LocalDateTime getDurationOfTheEvent() {
+        return durationOfTheEvent;
+    }
+
+    public void setDurationOfTheEvent(LocalDateTime durationOfTheEvent) {
+        this.durationOfTheEvent = durationOfTheEvent;
     }
 
     public void setOrganizerId(Long organizerId) {
@@ -72,11 +84,11 @@ public class Event {
         this.quantityOfPlayers = quantityOfPlayers;
     }
 
-    public Date getEventStart() {
+    public LocalDateTime getEventStart() {
         return eventStart;
     }
 
-    public void setEventStart(Date eventStart) {
+    public void setEventStart(LocalDateTime eventStart) {
         this.eventStart = eventStart;
     }
 
