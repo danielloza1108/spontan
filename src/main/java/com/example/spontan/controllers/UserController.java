@@ -1,6 +1,7 @@
 package com.example.spontan.controllers;
 
 
+import com.example.spontan.DTO.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.service.UserService;
 import org.springframework.http.MediaType;
@@ -18,9 +19,20 @@ public class UserController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<String> addUser(@RequestBody User user) {
         userService.saveUser(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping(value = "/get/{email}")
+    public UserDTO getUser(@PathVariable String email){
+        return userService.getUserByEmail(email);
+    }
+
+    @PostMapping(value = "/edit/{email}/{password}")
+    public ResponseEntity<String> editPassword(@PathVariable String email, @PathVariable String password){
+        userService.editPassword(email,password);
+        return ResponseEntity.ok("Success");
     }
 
 }
