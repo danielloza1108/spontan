@@ -42,7 +42,7 @@ public class UserController {
         "password": "sth"
     }
      */
-    @PostMapping(value = "/edit")
+    @PostMapping(value = "/edit/password")
     public ResponseEntity<String> editPassword(@RequestBody String jsonEmailAndPassword) throws JSONException {
         userService.editPassword(jsonEmailAndPassword);
         return ResponseEntity.ok("Success");
@@ -59,7 +59,6 @@ public class UserController {
         userService.addFriend(jsonUserEmailAndFriendEmail);
         return ResponseEntity.ok("Success");
     }
-
     /*
     {
         "email": "sth"
@@ -68,6 +67,11 @@ public class UserController {
     @GetMapping(value = "/getFriendsId", produces=MediaType.APPLICATION_JSON_VALUE)
     public List<Long> getFriends(@RequestBody String jsonEmail) throws JSONException {
         return userService.getFriendsId(jsonEmail);
+    }
+
+    @GetMapping(value = "/getUserById", produces=MediaType.APPLICATION_JSON_VALUE)
+    public UserDTO getUserById(@RequestBody String userJsonId) throws JSONException {
+        return userService.getUserById(userJsonId);
     }
 
 }

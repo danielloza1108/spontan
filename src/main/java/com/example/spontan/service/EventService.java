@@ -2,7 +2,7 @@ package com.example.spontan.service;
 
 import com.example.spontan.DAO.EventDAO;
 import com.example.spontan.entity.Event;
-import com.example.spontan.exception.EventNotExist;
+import com.example.spontan.exception.EventNotExistException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,25 +25,25 @@ public class EventService {
             for (Event event1 : events) {
                 checkEventCollides(event, event1);
             }
-
         }
         eventDAO.save(event);
     }
 
-
-
-
+    @Transactional
+    public void deleteEvent(Event event){
+        if(eventDAO.f)
+    }
 
     public void checkEventCollides(Event event, Event event1) {
         if(event1.getEventStart().compareTo(event.getEventStart()) == 0){
-            throw new EventNotExist("Another event on this place in this date");
+            throw new EventNotExistException("Another event on this place in this date");
         }else if(event1.getEventStart().compareTo(event.getEventStart()) < 0){
             LocalDateTime localDateTime = event1.getEventStart();
             localDateTime = localDateTime.plusHours(event1.getDurationOfTheEvent().getHour());
             localDateTime = localDateTime.plusMinutes(event1.getDurationOfTheEvent().getMinute());
             if(localDateTime.compareTo(event.getEventStart()) > 0){
                 System.out.println(localDateTime);
-                throw new EventNotExist("The event collides with previous event");
+                throw new EventNotExistException("The event collides with previous event");
             }
 
         }else if(event1.getEventStart().compareTo(event.getEventStart()) > 0){
@@ -52,8 +52,10 @@ public class EventService {
             localDateTime = localDateTime.plusMinutes(event.getDurationOfTheEvent().getMinute());
             if(localDateTime.compareTo(event1.getEventStart()) > 0){
                 System.out.println(localDateTime);
-                throw new EventNotExist("The event collides with next event");
+                throw new EventNotExistException("The event collides with next event");
             }
         }
     }
+
+
 }

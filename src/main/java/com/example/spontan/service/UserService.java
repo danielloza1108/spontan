@@ -96,14 +96,12 @@ public class UserService {
 
 
     public UserDTO getUserById(String json) throws JSONException {
-
         JSONObject jsonObject = new JSONObject(json);
         String userId = jsonObject.getString("userId");
         UserDTO userDTO = modelMapper.map(userDAO.getUserById(Long.parseLong(userId)), UserDTO.class);
         if(userDTO == null) {
             throw new UserIsNotInTheBaseException("No user in the base");
         }
-
         return userDTO;
     }
 }
