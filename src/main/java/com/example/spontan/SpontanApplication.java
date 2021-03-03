@@ -28,6 +28,7 @@ public class SpontanApplication {
                 map().setName(source.getName());
             }
         });
+
         return modelMapper;
     }
 
