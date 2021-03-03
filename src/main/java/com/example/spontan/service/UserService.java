@@ -4,7 +4,7 @@ import com.example.spontan.DAO.UserDAO;
 import com.example.spontan.DTO.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.UserAlreadyInDBException;
-import com.example.spontan.exception.UserIsNotInTheBase;
+import com.example.spontan.exception.UserIsNotInTheBaseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -41,7 +41,7 @@ public class UserService {
         JSONObject jsonObject = new JSONObject(json);
         String email = jsonObject.getString("email");
         if(userDAO.findByEmail(email) == null){
-          throw new UserIsNotInTheBase("No user in the base" + email);
+          throw new UserIsNotInTheBaseException("No user in the base" + email);
         }
         User user = userDAO.findByEmail(email);
         UserDTO userDTO = modelMapper.map(user,UserDTO.class);
@@ -55,7 +55,7 @@ public class UserService {
         String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
         if(userDAO.findByEmail(email) == null){
-            throw new UserIsNotInTheBase("No user in the base");
+            throw new UserIsNotInTheBaseException("No user in the base");
         }
         User user = userDAO.findByEmail(email);
         user.setPassword(passwordEncoder.encode(password));
@@ -68,9 +68,9 @@ public class UserService {
         String userEmail = jsonObject.getString("userEmail");
         String friendEmail = jsonObject.getString("friendEmail");
         if(userDAO.findByEmail(userEmail) == null){
-            throw new UserIsNotInTheBase("No user in the base");
+            throw new UserIsNotInTheBaseException("No user in the base");
         }else if(userDAO.findByEmail(friendEmail) == null){
-            throw new UserIsNotInTheBase("No friend in the base");
+            throw new UserIsNotInTheBaseException("No friend in the base");
         }
         //For user
         User user = userDAO.findByEmail(userEmail);
@@ -90,7 +90,7 @@ public class UserService {
         JSONObject jsonObject = new JSONObject(json);
         String email = jsonObject.getString("email");
         if(userDAO.findByEmail(email) == null){
-            throw new UserIsNotInTheBase("No user in the base");
+            throw new UserIsNotInTheBaseException("No user in the base");
         }
         List<Long> usersId = userDAO.findFriendsById(userDAO.findByEmail(email).getId());
         return usersId;

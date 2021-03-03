@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Event {
@@ -15,6 +17,8 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private final String uuid = UUID.randomUUID().toString();
 
     private String name;
     @JsonProperty(value = "quantity")
@@ -38,6 +42,17 @@ public class Event {
 
     public Event() {
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || o instanceof Event &&
+                Objects.equals(uuid, ((Event) o).uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 
     public LocalDateTime getDurationOfTheEvent() {

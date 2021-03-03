@@ -2,6 +2,8 @@ package com.example.spontan.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class User {
@@ -14,17 +16,24 @@ public class User {
     private String email;
 
     private String password;
+
+    private final String uuid = UUID.randomUUID().toString();
+
     @ManyToMany
     private List<User> friends;
 
-    public User() {
+    @Override
+    public boolean equals(Object o) {
+        return this == o || o instanceof User &&
+                Objects.equals(uuid, ((User) o).uuid);
     }
 
-    public User(String name, String email, String password, List<User> friends) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.friends = friends;
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
+
+    public User() {
     }
 
     public List<User> getFriends() {
