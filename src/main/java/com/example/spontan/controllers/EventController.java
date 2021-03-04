@@ -1,6 +1,6 @@
 package com.example.spontan.controllers;
 
-import com.example.spontan.entity.Event;
+import com.example.spontan.dto.EventDTO;
 import com.example.spontan.service.EventService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api2")
+@RequestMapping("/api/event")
 public class EventController {
     private final EventService eventService;
 
@@ -18,8 +18,10 @@ public class EventController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addEvent(@RequestBody Event event){
-        eventService.addEvent(event);
+    public ResponseEntity<String> addEvent(@RequestBody EventDTO eventDTO){
+        eventService.addEvent(eventDTO);
         return ResponseEntity.ok("Success");
     }
+
+
 }

@@ -8,8 +8,15 @@ public class EventDTO {
     private Integer quantityOfPlayers;
     private LocalDateTime eventStart;
     private LocalDateTime durationOfTheEvent;
+    private String eventPlace;
 
+    public String getEventPlace() {
+        return eventPlace;
+    }
 
+    public void setEventPlace(String eventPlace) {
+        this.eventPlace = eventPlace;
+    }
 
     public String getName() {
         return name;

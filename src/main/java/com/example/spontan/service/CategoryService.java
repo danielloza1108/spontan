@@ -50,6 +50,7 @@ public class CategoryService {
         if(category == null){
             throw new CategoryNotFoundException("Category not exist");
         }
+        category.setName(categoryName);
         categoryDAO.save(category);
     }
 }

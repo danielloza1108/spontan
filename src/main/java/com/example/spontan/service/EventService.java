@@ -1,8 +1,12 @@
 package com.example.spontan.service;
 
 import com.example.spontan.dao.EventDAO;
+import com.example.spontan.dto.EventDTO;
 import com.example.spontan.entity.Event;
 import com.example.spontan.exception.EventNotExistException;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,24 +16,31 @@ import java.util.List;
 @Service
 public class EventService {
     private final EventDAO eventDAO;
+    private final ModelMapper modelMapper;
 
 
-    public EventService(EventDAO eventDAO) {
+    public EventService(EventDAO eventDAO, ModelMapper modelMapper) {
         this.eventDAO = eventDAO;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
-    public void addEvent(Event event){
-        if(eventDAO.findEventsByPlace(event.getPlace()) != null){
-            List<Event> events = eventDAO.findEventsByPlace(event.getPlace());
-            for (Event event1 : events) {
+    public void addEvent(EventDTO eventDTO){
+        List<Event> eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
+        Event event = modelMapper.map(eventDTO, Event.class);
+        if(eventsByPlace != null){
+            eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
+            for (Event event1 : eventsByPlace) {
                 checkEventCollides(event, event1);
             }
         }
         eventDAO.save(event);
     }
 
-    public void deleteEvent(Event event){
+    public void deleteEvent(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String eventName = jsonObject.getString("eventName");
+
 
     }
 
