@@ -5,6 +5,7 @@ import com.example.spontan.dto.CategoryDTO;
 import com.example.spontan.entity.Category;
 import com.example.spontan.exception.CategoryExistException;
 import com.example.spontan.exception.CategoryNotFoundException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,27 +32,24 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(CategoryDTO categoryDTO){
-        Category category = categoryDAO.findCategoryByName(categoryDTO.getName());
+    public void deleteCategory(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String categoryName = jsonObject.getString("name");
+        Category category = categoryDAO.findCategoryByName(categoryName);
         if(category == null){
             throw new CategoryNotFoundException("Category with this name not found");
         }
         categoryDAO.delete(category);
     }
 
-//    @Transactional
-//    public void updateCategory(String json){
-//        JSONObject jsonObject = new JSONObject();
-//
-//        Category category = categoryDAO.findCategoryByName(categoryDTO.getName());
-//        if(category == null){
-//            throw new CategoryNotFoundException("Category not exist");
-//        }
-//        categoryDAO.save(category);
-//    }
-//
-//    public CategoryDTO getCategoryObject(CategoryDTO categoryDTO){
-//
-//        return modelMapper.categoryDTO;
-//    }
+    @Transactional
+    public void updateCategory(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String categoryName = jsonObject.getString("name");
+        Category category = categoryDAO.findCategoryByName(categoryName);
+        if(category == null){
+            throw new CategoryNotFoundException("Category not exist");
+        }
+        categoryDAO.save(category);
+    }
 }
