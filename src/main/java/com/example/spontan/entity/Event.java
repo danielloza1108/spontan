@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,11 +27,12 @@ public class Event {
     @JsonProperty(value = "duration")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime durationOfTheEvent;
+
     @ManyToOne
     private Category category;
-    @ManyToOne
-    private User user;
 
+    @ManyToMany
+    private List<User> user;
 
 
     public Event() {
@@ -57,6 +59,7 @@ public class Event {
         this.durationOfTheEvent = durationOfTheEvent;
     }
 
+
     public Category getCategory() {
         return category;
     }
@@ -65,13 +68,6 @@ public class Event {
         this.category = category;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public String getPlace() {
         return place;

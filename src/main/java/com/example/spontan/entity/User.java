@@ -19,6 +19,9 @@ public class User {
 
     private final String uuid = UUID.randomUUID().toString();
 
+    @OneToMany
+    private List<Event> createdEvent;
+
     @ManyToMany
     private List<User> friends;
 
