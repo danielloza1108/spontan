@@ -22,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addUser(@RequestBody User user) {
-        userService.saveUser(user);
+    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
+        userService.saveUser(userDTO);
         return ResponseEntity.ok("Success");
     }
     //In get, edit and addFriend use JSON format like:
@@ -32,9 +32,9 @@ public class UserController {
         "email" : "sth"
     }
      */
-    @GetMapping(value = "/get")
-    public UserDTO getUser(@RequestBody String jsonEmail) throws JSONException {
-        return userService.getUserByEmail(jsonEmail);
+    @GetMapping(value = "/get/{email}")
+    public UserDTO getUser(@PathVariable String email){
+        return userService.getUserByEmail(email);
     }
     /*
     {
@@ -64,14 +64,14 @@ public class UserController {
         "email": "sth"
     }
      */
-    @GetMapping(value = "/getFriendsId", produces=MediaType.APPLICATION_JSON_VALUE)
-    public List<Long> getFriends(@RequestBody String jsonEmail) throws JSONException {
-        return userService.getFriendsId(jsonEmail);
+    @GetMapping(value = "/getFriendsId/{email}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public List<Long> getFriends(@PathVariable String email) {
+        return userService.getFriendsId(email);
     }
 
-    @GetMapping(value = "/getUserById", produces=MediaType.APPLICATION_JSON_VALUE)
-    public UserDTO getUserById(@RequestBody String userJsonId) throws JSONException {
-        return userService.getUserById(userJsonId);
+    @GetMapping(value = "/getUserById/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public UserDTO getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
 }

@@ -28,7 +28,8 @@ public class UserService {
     }
 
     @Transactional
-    public void saveUser(User user) {
+    public void saveUser(UserDTO userDTO) {
+        User user = modelMapper.map(userDTO,User.class);
         if (userDAO.findByEmail(user.getEmail()) != null) {
             throw new UserAlreadyInDBException("User with this email is already taken");
         }
@@ -37,9 +38,7 @@ public class UserService {
 
     }
     @Transactional
-    public UserDTO getUserByEmail(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        String email = jsonObject.getString("email");
+    public UserDTO getUserByEmail(String email) {
         if(userDAO.findByEmail(email) == null){
           throw new UserIsNotInTheBaseException("No user in the base" + email);
         }
@@ -85,9 +84,7 @@ public class UserService {
         userDAO.save(user1);
     }
 
-    public List<Long> getFriendsId(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        String email = jsonObject.getString("email");
+    public List<Long> getFriendsId(String email){
         if(userDAO.findByEmail(email) == null){
             throw new UserIsNotInTheBaseException("No user in the base");
         }
@@ -95,10 +92,8 @@ public class UserService {
     }
 
 
-    public UserDTO getUserById(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        String userId = jsonObject.getString("userId");
-        UserDTO userDTO = modelMapper.map(userDAO.getUserById(Long.parseLong(userId)), UserDTO.class);
+    public UserDTO getUserById(Long id){
+        UserDTO userDTO = modelMapper.map(userDAO.getUserById(id), UserDTO.class);
         if(userDTO == null) {
             throw new UserIsNotInTheBaseException("No user in the base");
         }
