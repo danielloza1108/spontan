@@ -26,34 +26,13 @@ public class UserController {
         userService.saveUser(userDTO);
         return ResponseEntity.ok("Success");
     }
-    //In get, edit and addFriend use JSON format like:
-    /*
-    {
-        "email" : "sth"
-    }
-     */
-    @GetMapping(value = "/get/{email}")
-    public UserDTO getUser(@PathVariable String email){
-        return userService.getUserByEmail(email);
-    }
-    /*
-    {
-        "email": "sth",
-        "password": "sth"
-    }
-     */
+
     @PostMapping(value = "/edit/password")
     public ResponseEntity<String> editPassword(@RequestBody String jsonEmailAndPassword) throws JSONException {
         userService.editPassword(jsonEmailAndPassword);
         return ResponseEntity.ok("Success");
     }
 
-    /*
-    {
-        "userEmail": "sth",
-        "friendEmail": "sth"
-    }
-     */
     @PostMapping(value = "/addFriend")
     public ResponseEntity<String> addFriend(@RequestBody String jsonUserEmailAndFriendEmail) throws JSONException {
         userService.addFriend(jsonUserEmailAndFriendEmail);
@@ -64,6 +43,11 @@ public class UserController {
         "email": "sth"
     }
      */
+    @GetMapping(value = "/get/{email}")
+    public UserDTO getUser(@PathVariable String email){
+        return userService.getUserByEmail(email);
+    }
+
     @GetMapping(value = "/getFriendsId/{email}", produces=MediaType.APPLICATION_JSON_VALUE)
     public List<Long> getFriends(@PathVariable String email) {
         return userService.getFriendsId(email);
