@@ -43,6 +43,13 @@ public class CategoryService {
         return categoryDTOS;
     }
 
+    public Category getCategoryByName(String name){
+        if(categoryDAO.findCategoryByName(name) == null){
+            throw new CategoryExistException("Category isn't exist");
+        }
+        return categoryDAO.findCategoryByName(name);
+    }
+
     @Transactional
     public void deleteCategory(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);

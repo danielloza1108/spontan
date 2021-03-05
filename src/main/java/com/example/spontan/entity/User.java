@@ -42,6 +42,22 @@ public class User {
     public User() {
     }
 
+    public List<Event> getCreatedEvent() {
+        return createdEvent;
+    }
+
+    public void setCreatedEvent(List<Event> createdEvent) {
+        this.createdEvent = createdEvent;
+    }
+
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
+    }
+
     public List<User> getFriends() {
         return friends;
     }

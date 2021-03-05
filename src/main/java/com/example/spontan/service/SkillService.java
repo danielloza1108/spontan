@@ -20,8 +20,7 @@ public class SkillService {
     }
 
     @Transactional
-    public void addSkill(SkillDTO skillDTO){
-        Skill skill = modelMapper.map(skillDTO, Skill.class);
+    public void addSkill(Skill skill){
         skillDAO.save(skill);
     }
 

@@ -1,5 +1,6 @@
 package com.example.spontan.dao;
 
+import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,6 @@ public interface UserDAO extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT friends_id FROM user_friends WHERE user_id = :id", nativeQuery = true)
     List<Long> findFriendsById(@Param("id") Long id);
-
     User getUserById(Long id);
 
 }

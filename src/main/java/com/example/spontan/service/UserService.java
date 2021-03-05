@@ -1,7 +1,9 @@
 package com.example.spontan.service;
 
 import com.example.spontan.dao.UserDAO;
+import com.example.spontan.dto.SkillDTO;
 import com.example.spontan.dto.UserDTO;
+import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.UserAlreadyInDBException;
 import com.example.spontan.exception.UserIsNotInTheBaseException;
@@ -20,11 +22,15 @@ public class UserService {
     private final UserDAO userDAO;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final CategoryService categoryService;
+    private final SkillService skillService;
 
-    public UserService(UserDAO userDAO, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserDAO userDAO, ModelMapper modelMapper, PasswordEncoder passwordEncoder, CategoryService categoryService, SkillService skillService) {
         this.userDAO = userDAO;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.categoryService = categoryService;
+        this.skillService = skillService;
     }
 
     @Transactional
@@ -99,8 +105,22 @@ public class UserService {
         }
         return userDTO;
     }
+    @Transactional
+    public void addSkillToUser(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String category = jsonObject.getString("name");
+        float rate = (float) jsonObject.getDouble("rate");
+        String email = jsonObject.getString("email");
+        Skill skill = new Skill();
+        skill.setCategory(categoryService.getCategoryByName(category));
+        skill.setRate(rate);
+        skillService.addSkill(skill);
+        User user = userDAO.findByEmail(email);
+        List<Skill> skills = user.getSkills();
+        skills.add(skill);
+        user.setSkills(skills);
+        userDAO.save(user);
 
-    public void addSkillToUser(){
 
     }
 }

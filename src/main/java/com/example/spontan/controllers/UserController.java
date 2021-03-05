@@ -58,4 +58,10 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @PostMapping(value = "/addSkill")
+    public ResponseEntity<String> addSkillToUser(@RequestBody String json) throws JSONException {
+        userService.addSkillToUser(json);
+        return ResponseEntity.ok("Success");
+    }
+
 }
