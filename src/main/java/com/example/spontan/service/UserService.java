@@ -1,12 +1,13 @@
 package com.example.spontan.service;
 
+import com.example.spontan.dao.CategoryDAO;
 import com.example.spontan.dao.UserDAO;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
+import com.example.spontan.exception.CategoryNotFoundException;
 import com.example.spontan.exception.UserAlreadyInDBException;
 import com.example.spontan.exception.UserIsNotInTheBaseException;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -24,13 +25,15 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final CategoryService categoryService;
     private final SkillService skillService;
+    private final CategoryDAO categoryDAO;
 
-    public UserService(UserDAO userDAO, ModelMapper modelMapper, PasswordEncoder passwordEncoder, CategoryService categoryService, SkillService skillService) {
+    public UserService(UserDAO userDAO, ModelMapper modelMapper, PasswordEncoder passwordEncoder, CategoryService categoryService, SkillService skillService, CategoryDAO categoryDAO) {
         this.userDAO = userDAO;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.categoryService = categoryService;
         this.skillService = skillService;
+        this.categoryDAO = categoryDAO;
     }
 
     @Transactional
@@ -111,6 +114,11 @@ public class UserService {
         String category = jsonObject.getString("name");
         float rate = (float) jsonObject.getDouble("rate");
         String email = jsonObject.getString("email");
+        if(userDAO.findByEmail(email) == null){
+            throw new UserIsNotInTheBaseException("User with this email is not in the database");
+        }else if(categoryDAO.findCategoryByName(category) == null){
+            throw new CategoryNotFoundException("Category with this name is not in the database");
+        }
         Skill skill = new Skill();
         skill.setCategory(categoryService.getCategoryByName(category));
         skill.setRate(rate);
