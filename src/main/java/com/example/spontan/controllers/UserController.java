@@ -4,12 +4,14 @@ package com.example.spontan.controllers;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.User;
 import com.example.spontan.service.UserService;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -62,6 +64,11 @@ public class UserController {
     public ResponseEntity<String> addSkillToUser(@RequestBody String json) throws JSONException {
         userService.addSkillToUser(json);
         return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping(value = "/showSkills/{email}")
+    public List<Map<String,String>> showSkills(@PathVariable String email) throws JSONException {
+        return userService.getAllUserSkills(email);
     }
 
 }

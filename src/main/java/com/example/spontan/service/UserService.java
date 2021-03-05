@@ -1,12 +1,12 @@
 package com.example.spontan.service;
 
 import com.example.spontan.dao.UserDAO;
-import com.example.spontan.dto.SkillDTO;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.UserAlreadyInDBException;
 import com.example.spontan.exception.UserIsNotInTheBaseException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -122,5 +122,23 @@ public class UserService {
         userDAO.save(user);
 
 
+    }
+
+    public List<Map<String,String>> getAllUserSkills(String email) throws JSONException {
+        User user = userDAO.findByEmail(email);
+        List<Long> skillsIds = skillService.getAllIdsForUser(user.getId());
+        List<Optional<Skill>> skills = new ArrayList<>();
+        for (Long skillsId : skillsIds) {
+            Optional<Skill> skill = skillService.findById(skillsId);
+            skills.add(skill);
+        }
+        List<Map<String,String>> list = new ArrayList<>();
+        for (Optional<Skill> skill : skills) {
+            Map<String,String> map = new HashMap<>();
+            map.put("rate", String.valueOf(skill.get().getRate()));
+            map.put("category", skill.get().getCategory().getName());
+            list.add(map);
+        }
+        return list;
     }
 }
