@@ -13,13 +13,10 @@ import javax.transaction.Transactional;
 public class SkillService {
     private final ModelMapper modelMapper;
     private final SkillDAO skillDAO;
-    private final Category category;
 
-    public SkillService(ModelMapper modelMapper, SkillDAO skillDAO, Category category) {
+    public SkillService(ModelMapper modelMapper, SkillDAO skillDAO) {
         this.modelMapper = modelMapper;
         this.skillDAO = skillDAO;
-
-        this.category = category;
     }
 
     @Transactional

@@ -9,6 +9,6 @@ import java.util.List;
 public interface CategoryDAO extends JpaRepository<Category, Long> {
 
     Category findCategoryByName(String name);
-    @Query(value = "SELECT * FROM categry", nativeQuery = true)
+    @Query(value = "SELECT * FROM category", nativeQuery = true)
     List<Category> getAll();
 }
