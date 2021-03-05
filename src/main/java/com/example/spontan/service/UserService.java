@@ -99,4 +99,8 @@ public class UserService {
         }
         return userDTO;
     }
+
+    public void addSkillToUser(){
+
+    }
 }

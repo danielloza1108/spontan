@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -29,6 +31,16 @@ public class CategoryService {
             throw new CategoryExistException("Category is already in base");
         }
         categoryDAO.save(modelMapper.map(categoryDTO, Category.class));
+    }
+
+
+    public List<CategoryDTO> getAllCategories(){
+        List<Category> categories = categoryDAO.getAll();
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+        for (Category category : categories) {
+            categoryDTOS.add(modelMapper.map(category,CategoryDTO.class));
+        }
+        return categoryDTOS;
     }
 
     @Transactional

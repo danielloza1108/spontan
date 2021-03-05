@@ -25,6 +25,9 @@ public class User {
     @ManyToMany
     private List<User> friends;
 
+    @OneToMany
+    private List<Skill> skills;
+
     @Override
     public boolean equals(Object o) {
         return this == o || o instanceof User &&

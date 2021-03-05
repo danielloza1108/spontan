@@ -2,9 +2,11 @@ package com.example.spontan;
 
 import com.example.spontan.dto.CategoryDTO;
 import com.example.spontan.dto.EventDTO;
+import com.example.spontan.dto.SkillDTO;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Event;
+import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -47,6 +49,12 @@ public class SpontanApplication {
             @Override
             protected void configure() {
                 map().setName(source.getName());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<Skill, SkillDTO>() {
+            @Override
+            protected void configure() {
+                map().setRate(source.getRate());
             }
         });
 
