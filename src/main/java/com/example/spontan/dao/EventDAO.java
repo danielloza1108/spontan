@@ -10,4 +10,6 @@ public interface EventDAO extends JpaRepository<Event,Long> {
     Event findByPlace(String place);
     List<Event> findEventsByPlace (String place);
     Optional<Event> findById(Long id);
+    Event findByName(String name);
+
 }

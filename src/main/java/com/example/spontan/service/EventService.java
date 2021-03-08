@@ -7,11 +7,13 @@ import com.example.spontan.exception.EventNotExistException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -41,7 +43,16 @@ public class EventService {
         JSONObject jsonObject = new JSONObject(json);
         String eventName = jsonObject.getString("eventName");
 
+    }
 
+    public EventDTO getEventById(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        String eventId = jsonObject.getString("eventId");
+        EventDTO eventDTO = modelMapper.map(eventDAO.findById(Long.parseLong(eventId)),EventDTO.class);
+        if(eventDTO == null){
+            throw new EventNotExistException("The event is not exist.");
+        }
+        return eventDTO;
     }
 
 

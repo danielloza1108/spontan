@@ -2,11 +2,11 @@ package com.example.spontan.controllers;
 
 import com.example.spontan.dto.EventDTO;
 import com.example.spontan.service.EventService;
+import org.json.JSONException;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/event")
@@ -22,6 +22,12 @@ public class EventController {
         eventService.addEvent(eventDTO);
         return ResponseEntity.ok("Success");
     }
+
+    @GetMapping(name = "/get/{eventId}", produces= MediaType.APPLICATION_JSON_VALUE)
+    public EventDTO getEventById(@PathVariable String eventId) throws JSONException {
+        return eventService.getEventById(eventId);
+    }
+
 
 
 }
