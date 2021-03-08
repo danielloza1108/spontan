@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "appUser")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

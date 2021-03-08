@@ -5,6 +5,7 @@ import com.example.spontan.dto.UserDTO;
 import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.service.EventService;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,10 @@ public class EventController {
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
-
+    //dodac kategorie
     @PostMapping("/add")
-    public ResponseEntity<String> addEvent(@RequestBody EventDTO eventDTO){
-        eventService.addEvent(eventDTO);
+    public ResponseEntity<String> addEvent(@RequestBody String json) throws JSONException {
+        eventService.addEvent(json);
         return ResponseEntity.ok("Success");
     }
 

@@ -1,12 +1,17 @@
 package com.example.spontan.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class EventDTO {
 
     private String name;
     private Integer quantityOfPlayers;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime eventStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime durationOfTheEvent;
     private String eventPlace;
 

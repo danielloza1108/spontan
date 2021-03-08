@@ -1,20 +1,25 @@
 package com.example.spontan.service;
 
+import com.example.spontan.dao.CategoryDAO;
 import com.example.spontan.dao.EventDAO;
 import com.example.spontan.dao.UserDAO;
+import com.example.spontan.dto.CategoryDTO;
 import com.example.spontan.dto.EventDTO;
 import com.example.spontan.dto.UserDTO;
+import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Event;
+import com.example.spontan.exception.CategoryNotFoundException;
 import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.exception.EventNotExistException;
+import com.example.spontan.exception.UserIsNotInTheBaseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +28,28 @@ public class EventService {
     private final EventDAO eventDAO;
     private final ModelMapper modelMapper;
     private final UserDAO  userDAO;
+    private final CategoryDAO categoryDAO;
 
 
-    public EventService(EventDAO eventDAO, ModelMapper modelMapper, UserDAO userDAO) {
+    public EventService(EventDAO eventDAO, ModelMapper modelMapper, UserDAO userDAO, CategoryDAO categoryDAO) {
         this.eventDAO = eventDAO;
         this.modelMapper = modelMapper;
         this.userDAO = userDAO;
+        this.categoryDAO = categoryDAO;
     }
 
     @Transactional
-    public void addEvent(EventDTO eventDTO){
+    public void addEvent(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        EventDTO eventDTO = new EventDTO();
+        eventDTO.setName(jsonObject.getString("name"));
+        eventDTO.setQuantityOfPlayers(jsonObject.getInt("quantityOfPlayers"));
+        eventDTO.setDurationOfTheEvent(parseStringToLocalDateTime(jsonObject.getString("durationOfTheEvent")));
+        eventDTO.setEventStart(parseStringToLocalDateTime(jsonObject.getString("eventStart")));
+        eventDTO.setEventPlace(jsonObject.getString("eventPlace"));
+        Category category = categoryDAO.findCategoryByName(jsonObject.getString("category"));
+        CategoryDTO categoryDTO = modelMapper.map(category,CategoryDTO.class);
+        Long userId = jsonObject.getLong("userId");
         List<Event> eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
         Event event = modelMapper.map(eventDTO, Event.class);
         if(eventsByPlace != null){
@@ -41,7 +58,16 @@ public class EventService {
                 checkEventCollides(event, event1);
             }
         }
+        if(categoryDAO.findCategoryByName(categoryDTO.getName()) == null){
+            throw new CategoryNotFoundException("This category isn't exist");
+        }
+        if(userDAO.getUserById(userId) == null){
+            throw new UserIsNotInTheBaseException("User is not in the base");
+        }
+        event.setCategory(category);
         eventDAO.save(event);
+        userDAO.saveUserToCreatedEvent(userId,event.getId());
+
     }
 
     public void deleteEvent(String json) throws JSONException {
@@ -96,5 +122,11 @@ public class EventService {
         }
 
         return userDTOS;
+    }
+
+    public LocalDateTime parseStringToLocalDateTime(String string){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(string, formatter);
+        return dateTime;
     }
 }
