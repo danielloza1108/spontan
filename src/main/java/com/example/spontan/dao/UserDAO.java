@@ -1,6 +1,5 @@
 package com.example.spontan.dao;
 
-import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,8 +15,7 @@ public interface UserDAO extends JpaRepository<User, Long> {
     List<Long> findFriendsById(@Param("id") Long id);
 
     //select all users joined to event
-    @Query(value = "select user_id from spontan.user inner join event_user eu on user.id = eu.user_id where event_id = :id;",nativeQuery = true)
-    List<Long> userIdListWhereEventId(@Param("id") Long id);
-
+    @Query(value = "select id from app_user inner join event_user eu on app_user.id = eu.user_id where event_id = :eventId",nativeQuery = true)
+    List<Long> userIdListWhereEventId(@Param("eventId") Long id);
 
 }

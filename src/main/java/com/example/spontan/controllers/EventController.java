@@ -26,12 +26,12 @@ public class EventController {
         return ResponseEntity.ok("Success");
     }
 
-    @GetMapping(name = "/get/{eventId}")
+    @GetMapping(value = "/get/{eventId}")
     public EventDTO getEventById(@PathVariable String eventId) throws JSONException {
         return eventService.getEventById(eventId);
     }
 
-    @GetMapping(name = "/getUserList/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getUserList/{eventId}")
     public ResponseEntity<List<UserDTO>> getUsersJoinedToEvent(@PathVariable String eventId) throws EventHaveNoUsersException {
         List<UserDTO> usersFromEvent = eventService.getUsersFromEvent(Long.parseLong(eventId));
         return ResponseEntity.ok(usersFromEvent);

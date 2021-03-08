@@ -18,12 +18,15 @@ public class Event {
     private final String uuid = UUID.randomUUID().toString();
 
     private String name;
+
     @JsonProperty(value = "quantity")
     private Integer quantityOfPlayers;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime eventStart;
 
     private String place;
+
     @JsonProperty(value = "duration")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime durationOfTheEvent;
@@ -53,6 +56,15 @@ public class Event {
 
     public LocalDateTime getDurationOfTheEvent() {
         return durationOfTheEvent;
+    }
+
+
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
     }
 
     public void setDurationOfTheEvent(LocalDateTime durationOfTheEvent) {
