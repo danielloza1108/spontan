@@ -1,29 +1,34 @@
 package com.example.spontan.service;
 
 import com.example.spontan.dao.EventDAO;
+import com.example.spontan.dao.UserDAO;
 import com.example.spontan.dto.EventDTO;
+import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Event;
+import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.exception.EventNotExistException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EventService {
     private final EventDAO eventDAO;
     private final ModelMapper modelMapper;
+    private final UserDAO  userDAO;
 
 
-    public EventService(EventDAO eventDAO, ModelMapper modelMapper) {
+    public EventService(EventDAO eventDAO, ModelMapper modelMapper, UserDAO userDAO) {
         this.eventDAO = eventDAO;
         this.modelMapper = modelMapper;
+        this.userDAO = userDAO;
     }
 
     @Transactional
@@ -79,5 +84,17 @@ public class EventService {
         }
     }
 
+    public List<UserDTO> getUsersFromEvent(Long eventId) throws EventHaveNoUsersException {
+        List<Long> userIds = userDAO.userIdListWhereEventId(eventId);
+        List<UserDTO> userDTOS = new ArrayList<>();
+        if(userIds != null) {
+            for (Long userId : userIds) {
+                userDTOS.add(modelMapper.map(userDAO.getUserById(userId), UserDTO.class));
+            }
+        }else {
+            throw new EventHaveNoUsersException("Event have no joined users");
+        }
 
+        return userDTOS;
+    }
 }

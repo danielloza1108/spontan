@@ -6,6 +6,7 @@ import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.CategoryNotFoundException;
+import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.exception.UserAlreadyInDBException;
 import com.example.spontan.exception.UserIsNotInTheBaseException;
 import org.json.JSONException;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Type;
 import java.util.*;
 
 @Service

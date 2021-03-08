@@ -1,12 +1,15 @@
 package com.example.spontan.controllers;
 
 import com.example.spontan.dto.EventDTO;
+import com.example.spontan.dto.UserDTO;
+import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.service.EventService;
 import org.json.JSONException;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/event")
@@ -23,11 +26,15 @@ public class EventController {
         return ResponseEntity.ok("Success");
     }
 
-    @GetMapping(name = "/get/{eventId}", produces= MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(name = "/get/{eventId}")
     public EventDTO getEventById(@PathVariable String eventId) throws JSONException {
         return eventService.getEventById(eventId);
     }
 
-
+    @GetMapping(name = "/getUserList/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDTO>> getUsersJoinedToEvent(@PathVariable String eventId) throws EventHaveNoUsersException {
+        List<UserDTO> usersFromEvent = eventService.getUsersFromEvent(Long.parseLong(eventId));
+        return ResponseEntity.ok(usersFromEvent);
+    }
 
 }
