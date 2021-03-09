@@ -10,6 +10,9 @@ public class Skill {
     @OneToOne
     private Category category;
     private float rate;
+    @ManyToOne
+    private User user;
+    private boolean addedByMyself;
 
     public Skill() {
     }

@@ -25,7 +25,7 @@ public class User {
     @ManyToMany
     private List<User> friends;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Skill> skills;
 
     @Override
