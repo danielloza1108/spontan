@@ -36,10 +36,12 @@ public class EventController {
         return ResponseEntity.ok(usersFromEvent);
     }
 
-    @PostMapping(value = "/save/joinUserToEvent")
+    @PostMapping(value = "/saveUserToEvent")
     public ResponseEntity<String> joinUserToEvent(@RequestBody String json) throws JSONException {
         EventDTO eventById = eventService.getEventById(json);
         eventService.joinToEventByUser(json);
         return ResponseEntity.ok("User joined to event name: " + eventById.getName());
     }
+
+
 }
