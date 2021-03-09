@@ -3,6 +3,7 @@ package com.example.spontan.controllers;
 import com.example.spontan.dto.EventDTO;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.exception.EventHaveNoUsersException;
+import com.example.spontan.exception.UserIsNotInTheEventException;
 import com.example.spontan.service.EventService;
 import org.json.JSONException;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +45,8 @@ public class EventController {
     }
 
     @PostMapping(value = "/delete/user")
-    public ResponseEntity<String> deleteUserFromEvent(@RequestBody String json)
+    public ResponseEntity<String> deleteUserFromEvent(@RequestBody String json) throws UserIsNotInTheEventException, JSONException, EventHaveNoUsersException {
+        eventService.deleteUserFromEvent(json);
+        return ResponseEntity.ok("deleted");
+    }
 }

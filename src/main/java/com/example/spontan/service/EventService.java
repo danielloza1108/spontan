@@ -9,10 +9,7 @@ import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Event;
 import com.example.spontan.entity.User;
-import com.example.spontan.exception.CategoryNotFoundException;
-import com.example.spontan.exception.EventHaveNoUsersException;
-import com.example.spontan.exception.EventNotExistException;
-import com.example.spontan.exception.UserIsNotInTheBaseException;
+import com.example.spontan.exception.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -29,7 +26,7 @@ import java.util.Optional;
 public class EventService {
     private final EventDAO eventDAO;
     private final ModelMapper modelMapper;
-    private final UserDAO  userDAO;
+    private final UserDAO userDAO;
     private final CategoryDAO categoryDAO;
 
 
@@ -50,25 +47,25 @@ public class EventService {
         eventDTO.setEventStart(parseStringToLocalDateTime(jsonObject.getString("eventStart")));
         eventDTO.setEventPlace(jsonObject.getString("eventPlace"));
         Category category = categoryDAO.findCategoryByName(jsonObject.getString("category"));
-        CategoryDTO categoryDTO = modelMapper.map(category,CategoryDTO.class);
+        CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
         Long userId = jsonObject.getLong("userId");
         List<Event> eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
         Event event = modelMapper.map(eventDTO, Event.class);
-        if(eventsByPlace != null){
+        if (eventsByPlace != null) {
             eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
             for (Event event1 : eventsByPlace) {
                 checkEventCollides(event, event1);
             }
         }
-        if(categoryDAO.findCategoryByName(categoryDTO.getName()) == null){
+        if (categoryDAO.findCategoryByName(categoryDTO.getName()) == null) {
             throw new CategoryNotFoundException("This category isn't exist");
         }
-        if(userDAO.getUserById(userId) == null){
+        if (userDAO.getUserById(userId) == null) {
             throw new UserIsNotInTheBaseException("User is not in the base");
         }
         event.setCategory(category);
         eventDAO.save(event);
-        userDAO.saveUserToCreatedEvent(userId,event.getId());
+        userDAO.saveUserToCreatedEvent(userId, event.getId());
 
     }
 
@@ -81,8 +78,8 @@ public class EventService {
     public EventDTO getEventById(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
         String eventId = jsonObject.getString("eventId");
-        EventDTO eventDTO = modelMapper.map(eventDAO.findById(Long.parseLong(eventId)),EventDTO.class);
-        if(eventDTO == null){
+        EventDTO eventDTO = modelMapper.map(eventDAO.findById(Long.parseLong(eventId)), EventDTO.class);
+        if (eventDTO == null) {
             throw new EventNotExistException("The event is not exist.");
         }
         return eventDTO;
@@ -90,22 +87,22 @@ public class EventService {
 
 
     public void checkEventCollides(Event event, Event event1) {
-        if(event1.getEventStart().compareTo(event.getEventStart()) == 0){
+        if (event1.getEventStart().compareTo(event.getEventStart()) == 0) {
             throw new EventNotExistException("Another event on this place in this date");
-        }else if(event1.getEventStart().compareTo(event.getEventStart()) < 0){
+        } else if (event1.getEventStart().compareTo(event.getEventStart()) < 0) {
             LocalDateTime localDateTime = event1.getEventStart();
             localDateTime = localDateTime.plusHours(event1.getDurationOfTheEvent().getHour());
             localDateTime = localDateTime.plusMinutes(event1.getDurationOfTheEvent().getMinute());
-            if(localDateTime.compareTo(event.getEventStart()) > 0){
+            if (localDateTime.compareTo(event.getEventStart()) > 0) {
                 System.out.println(localDateTime);
                 throw new EventNotExistException("The event collides with previous event");
             }
 
-        }else if(event1.getEventStart().compareTo(event.getEventStart()) > 0){
+        } else if (event1.getEventStart().compareTo(event.getEventStart()) > 0) {
             LocalDateTime localDateTime = event.getEventStart();
             localDateTime = localDateTime.plusHours(event.getDurationOfTheEvent().getHour());
             localDateTime = localDateTime.plusMinutes(event.getDurationOfTheEvent().getMinute());
-            if(localDateTime.compareTo(event1.getEventStart()) > 0){
+            if (localDateTime.compareTo(event1.getEventStart()) > 0) {
                 System.out.println(localDateTime);
                 throw new EventNotExistException("The event collides with next event");
             }
@@ -115,18 +112,18 @@ public class EventService {
     public List<UserDTO> getUsersFromEvent(Long eventId) throws EventHaveNoUsersException {
         List<Long> userIds = userDAO.userIdListWhereEventId(eventId);
         List<UserDTO> userDTOS = new ArrayList<>();
-        if(userIds != null) {
+        if (userIds != null) {
             for (Long userId : userIds) {
                 userDTOS.add(modelMapper.map(userDAO.getUserById(userId), UserDTO.class));
             }
-        }else {
+        } else {
             throw new EventHaveNoUsersException("Event have no joined users");
         }
 
         return userDTOS;
     }
 
-    public LocalDateTime parseStringToLocalDateTime(String string){
+    public LocalDateTime parseStringToLocalDateTime(String string) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(string, formatter);
         return dateTime;
@@ -138,7 +135,7 @@ public class EventService {
         Long eventId = jsonObject.getLong("eventId");
         Long userId = jsonObject.getLong("userId");
         Optional<Event> eventById = eventDAO.findById(eventId);
-        if(eventById.isEmpty()){
+        if (eventById.isEmpty()) {
             throw new EventNotExistException("Event is not exist");
         }
         Optional<User> userById = userDAO.findById(userId);
@@ -147,5 +144,36 @@ public class EventService {
 
         eventById.get().setUser(list);
         eventDAO.save(eventById.get());
+    }
+
+    public void deleteUserFromEvent(String json) throws JSONException, EventHaveNoUsersException, UserIsNotInTheEventException {
+        JSONObject jsonObject = new JSONObject(json);
+        Long eventId = jsonObject.getLong("eventId");
+        Long userId = jsonObject.getLong("userId");
+        Optional<Event> eventById = eventDAO.findById(eventId);
+        if (eventById.isEmpty()) {
+            throw new EventNotExistException("Event is not exist");
+        }
+        Optional<User> userById = userDAO.findById(userId);
+        if (userById.isEmpty()) {
+            throw new UserIsNotInTheBaseException("No user to delete");
+        }
+        List<User> list = eventById.get().getUser();
+        if (!isUserInEvent(userById.get().getId(), eventById.get())) {
+          throw new UserIsNotInTheEventException("User is not in event");
+        }
+        list.remove(userById.get());
+        eventDAO.save(eventById.get());
+    }
+
+    public boolean isUserInEvent(Long userId, Event event) throws EventHaveNoUsersException {
+        List<UserDTO> userList = getUsersFromEvent(event.getId());
+        Optional<User> userById = userDAO.findById(userId);
+        for (UserDTO userDTO : userList) {
+            if (userDTO.getEmail().equals(userById.get().getEmail())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

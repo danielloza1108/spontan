@@ -22,4 +22,5 @@ public interface UserDAO extends JpaRepository<User, Long> {
     @Modifying
     @Query(value = "INSERT INTO app_user_created_event(app_user_id,created_event_id) VALUES (:userId,:eventId)",nativeQuery = true)
     void saveUserToCreatedEvent(@Param("userId") Long userId, @Param("eventId") Long eventId);
+
 }
