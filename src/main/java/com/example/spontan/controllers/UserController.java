@@ -38,22 +38,23 @@ public class UserController {
         userService.addFriend(jsonUserEmailAndFriendEmail);
         return ResponseEntity.ok("Success");
     }
+
     /*
     {
         "email": "sth"
     }
      */
     @GetMapping(value = "/get/{email}")
-    public UserDTO getUser(@PathVariable String email){
+    public UserDTO getUser(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping(value = "/getFriendsId/{email}", produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getFriendsId/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Long> getFriends(@PathVariable String email) {
         return userService.getFriendsId(email);
     }
 
-    @GetMapping(value = "/getUserById/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getUserById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
@@ -65,7 +66,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/showSkills/{email}")
-    public List<Map<String,String>> showSkills(@PathVariable String email) throws JSONException {
+    public List<Map<String, String>> showSkills(@PathVariable String email) throws JSONException {
         return userService.getAllUserSkills(email);
+    }
+
+    @GetMapping(value = "/showSkillsByUsers/{email}")
+    public List<Map<String, String>> showSkillsAddedByUsers(@PathVariable String email) throws JSONException {
+        return userService.getAllUserSkillsAddedByUsers(email);
     }
 }

@@ -3,6 +3,7 @@ package com.example.spontan.service;
 import com.example.spontan.dao.CategoryDAO;
 import com.example.spontan.dao.UserDAO;
 import com.example.spontan.dto.UserDTO;
+import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Skill;
 import com.example.spontan.entity.User;
 import com.example.spontan.exception.CategoryNotFoundException;
@@ -40,7 +41,7 @@ public class UserService {
 
     @Transactional
     public void saveUser(UserDTO userDTO) {
-        User user = modelMapper.map(userDTO,User.class);
+        User user = modelMapper.map(userDTO, User.class);
         if (userDAO.findByEmail(user.getEmail()) != null) {
             throw new UserAlreadyInDBException("User with this email is already taken");
         }
@@ -48,13 +49,14 @@ public class UserService {
         userDAO.save(user);
 
     }
+
     @Transactional
     public UserDTO getUserByEmail(String email) {
-        if(userDAO.findByEmail(email) == null){
-          throw new UserIsNotInTheBaseException("No user in the base" + email);
+        if (userDAO.findByEmail(email) == null) {
+            throw new UserIsNotInTheBaseException("No user in the base" + email);
         }
         User user = userDAO.findByEmail(email);
-        return modelMapper.map(user,UserDTO.class);
+        return modelMapper.map(user, UserDTO.class);
 
     }
 
@@ -63,7 +65,7 @@ public class UserService {
         JSONObject jsonObject = new JSONObject(json);
         String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
-        if(userDAO.findByEmail(email) == null){
+        if (userDAO.findByEmail(email) == null) {
             throw new UserIsNotInTheBaseException("No user in the base");
         }
         User user = userDAO.findByEmail(email);
@@ -76,9 +78,9 @@ public class UserService {
         JSONObject jsonObject = new JSONObject(json);
         String userEmail = jsonObject.getString("userEmail");
         String friendEmail = jsonObject.getString("friendEmail");
-        if(userDAO.findByEmail(userEmail) == null){
+        if (userDAO.findByEmail(userEmail) == null) {
             throw new UserIsNotInTheBaseException("No user in the base");
-        }else if(userDAO.findByEmail(friendEmail) == null){
+        } else if (userDAO.findByEmail(friendEmail) == null) {
             throw new UserIsNotInTheBaseException("No friend in the base");
         }
         //For user
@@ -95,21 +97,22 @@ public class UserService {
         userDAO.save(user1);
     }
 
-    public List<Long> getFriendsId(String email){
-        if(userDAO.findByEmail(email) == null){
+    public List<Long> getFriendsId(String email) {
+        if (userDAO.findByEmail(email) == null) {
             throw new UserIsNotInTheBaseException("No user in the base");
         }
         return userDAO.findFriendsById(userDAO.findByEmail(email).getId());
     }
 
 
-    public UserDTO getUserById(Long id){
+    public UserDTO getUserById(Long id) {
         UserDTO userDTO = modelMapper.map(userDAO.getUserById(id), UserDTO.class);
-        if(userDTO == null) {
+        if (userDTO == null) {
             throw new UserIsNotInTheBaseException("No user in the base");
         }
         return userDTO;
     }
+
     @Transactional
     public void addSkillToUser(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
@@ -117,15 +120,15 @@ public class UserService {
         float rate = (float) jsonObject.getDouble("rate");
         String email = jsonObject.getString("email");
         String addUserEmail = jsonObject.getString("addUserEmail");
-        if(userDAO.findByEmail(email) == null){
+        if (userDAO.findByEmail(email) == null) {
             throw new UserIsNotInTheBaseException("User with this email is not in the database");
-        }else if(categoryDAO.findCategoryByName(category) == null){
+        } else if (categoryDAO.findCategoryByName(category) == null) {
             throw new CategoryNotFoundException("Category with this name is not in the database");
         }
         boolean byMyself;
-        if(userDAO.findByEmail(addUserEmail).getEmail().equals(userDAO.findByEmail(email).getEmail())){
+        if (userDAO.findByEmail(addUserEmail).getEmail().equals(userDAO.findByEmail(email).getEmail())) {
             byMyself = true;
-        }else{
+        } else {
             byMyself = false;
         }
         Skill skill = new Skill();
@@ -144,16 +147,34 @@ public class UserService {
 
     }
 
-    public List<Map<String,String>> getAllUserSkills(String email) throws JSONException {
+    public List<Map<String, String>> getAllUserSkills(String email) throws JSONException {
         User user = userDAO.findByEmail(email);
-        List<Skill> skills = skillService.getAllIdsForUser(user.getId());
+        List<Skill> skills = skillService.getAllSkillsForUser(user.getId());
 
-        List<Map<String,String>> list = new ArrayList<>();
+        List<Map<String, String>> list = new ArrayList<>();
         for (Skill skill : skills) {
-            Map<String,String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>();
             map.put("rate", String.valueOf(skill.getRate()));
             map.put("category", skill.getCategory().getName());
             list.add(map);
+        }
+        return list;
+    }
+
+    public List<Map<String, String>> getAllUserSkillsAddedByUsers(String email) throws JSONException {
+        User user = userDAO.findByEmail(email);
+        List<Category> categories = categoryDAO.getAll();
+        List<Map<String, String>> list = new ArrayList<>();
+        for (Category category : categories) {
+            if(skillService.getAllSkillsForUserAddedByUsersByCategory(user.getId(),category.getId()).size() != 0) {
+                Map<String, String> map = new HashMap<>();
+                map.put("category", category.getName());
+                int counter = skillService.getCountOfSkillsAddedByUsers(user.getId(), category.getId());
+                float sumOfRates = skillService.getSumOfRatesSkillsByCategory(user.getId(), category.getId());
+                map.put("avgOfRates", String.valueOf(sumOfRates / counter));
+                map.put("counterOfRates", String.valueOf(counter));
+                list.add(map);
+            }
         }
         return list;
     }

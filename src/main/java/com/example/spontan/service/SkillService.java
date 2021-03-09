@@ -20,15 +20,32 @@ public class SkillService {
     }
 
     @Transactional
-    public void addSkill(Skill skill){
+    public void addSkill(Skill skill) {
         skillDAO.save(skill);
     }
 
-    public List<Skill> getAllIdsForUser(Long userId){
+    public List<Skill> getAllSkillsForUser(Long userId) {
         return skillDAO.findAllSkillsByUserId(userId);
     }
 
-    public Optional<Skill> findById(Long id){
+    public List<Skill> getAllSkillsForUserAddedByUsers(Long userId) {
+        return skillDAO.findAllSkillsByUserIdAddedByUsers(userId);
+    }
+
+    public List<Skill> getAllSkillsForUserAddedByUsersByCategory(Long userId, Long categoryId) {
+        return skillDAO.findAllSkillsByUserIdAddedByUsersByCategory(userId, categoryId);
+    }
+
+    public int getCountOfSkillsAddedByUsers(Long userId, Long categoryId) {
+        return skillDAO.countAllSkillsByUserIdAddedByUsers(userId, categoryId);
+    }
+
+    public float getSumOfRatesSkillsByCategory(Long userId, Long categoryId) {
+        return skillDAO.sumOfRatesSkillsByCategory(userId, categoryId);
+    }
+
+
+    public Optional<Skill> findById(Long id) {
         return skillDAO.findById(id);
     }
 
