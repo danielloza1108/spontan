@@ -146,17 +146,13 @@ public class UserService {
 
     public List<Map<String,String>> getAllUserSkills(String email) throws JSONException {
         User user = userDAO.findByEmail(email);
-        List<Long> skillsIds = skillService.getAllIdsForUser(user.getId());
-        List<Optional<Skill>> skills = new ArrayList<>();
-        for (Long skillsId : skillsIds) {
-            Optional<Skill> skill = skillService.findById(skillsId);
-            skills.add(skill);
-        }
+        List<Skill> skills = skillService.getAllIdsForUser(user.getId());
+
         List<Map<String,String>> list = new ArrayList<>();
-        for (Optional<Skill> skill : skills) {
+        for (Skill skill : skills) {
             Map<String,String> map = new HashMap<>();
-            map.put("rate", String.valueOf(skill.get().getRate()));
-            map.put("category", skill.get().getCategory().getName());
+            map.put("rate", String.valueOf(skill.getRate()));
+            map.put("category", skill.getCategory().getName());
             list.add(map);
         }
         return list;

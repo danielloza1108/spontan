@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SkillDAO extends JpaRepository<Skill, Long> {
-    @Query(value = "SELECT skills_id FROM user_skills WHERE user_id = :id",nativeQuery = true)
-    List<Long> findAllSkillsByUserId(@Param("id") Long id);
+    @Query(value = "select * from skill where user_id = :id and added_by_myself = true",nativeQuery = true)
+    List<Skill> findAllSkillsByUserId(@Param("id") Long id);
     Optional<Skill> findById(Long id);
 }

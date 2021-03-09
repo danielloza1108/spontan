@@ -24,7 +24,7 @@ public class SkillService {
         skillDAO.save(skill);
     }
 
-    public List<Long> getAllIdsForUser(Long userId){
+    public List<Skill> getAllIdsForUser(Long userId){
         return skillDAO.findAllSkillsByUserId(userId);
     }
 
