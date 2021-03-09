@@ -2,9 +2,7 @@ package com.example.spontan.controllers;
 
 
 import com.example.spontan.dto.UserDTO;
-import com.example.spontan.entity.User;
 import com.example.spontan.service.UserService;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

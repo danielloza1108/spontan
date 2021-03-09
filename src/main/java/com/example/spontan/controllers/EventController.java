@@ -42,4 +42,7 @@ public class EventController {
         eventService.joinToEventByUser(json);
         return ResponseEntity.ok("User joined to event name: " + eventById.getName());
     }
+
+    @PostMapping(value = "/delete/user")
+    public ResponseEntity<String> deleteUserFromEvent(@RequestBody String json)
 }
