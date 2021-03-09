@@ -17,10 +17,9 @@ public interface UserDAO extends JpaRepository<User, Long> {
     List<Long> findFriendsById(@Param("id") Long id);
 
     //select all users joined to event
-    @Query(value = "select id from app_user inner join event_user eu on app_user.id = eu.user_id where event_id = :eventId",nativeQuery = true)
+    @Query(value = "SELECT id FROM app_user INNER JOIN event_user eu ON app_user.id = eu.user_id WHERE event_id = :eventId",nativeQuery = true)
     List<Long> userIdListWhereEventId(@Param("eventId") Long id);
     @Modifying
-    @Query(value = "insert into app_user_created_event(app_user_id,created_event_id) values (:userId,:eventId)",nativeQuery = true)
+    @Query(value = "INSERT INTO app_user_created_event(app_user_id,created_event_id) VALUES (:userId,:eventId)",nativeQuery = true)
     void saveUserToCreatedEvent(@Param("userId") Long userId, @Param("eventId") Long eventId);
-
 }
