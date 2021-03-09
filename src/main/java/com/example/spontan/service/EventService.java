@@ -8,6 +8,7 @@ import com.example.spontan.dto.EventDTO;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Event;
+import com.example.spontan.entity.User;
 import com.example.spontan.exception.CategoryNotFoundException;
 import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.exception.EventNotExistException;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -128,5 +130,22 @@ public class EventService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(string, formatter);
         return dateTime;
+    }
+
+    @Transactional
+    public void joinToEventByUser(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        Long eventId = jsonObject.getLong("eventId");
+        Long userId = jsonObject.getLong("userId");
+        Optional<Event> eventById = eventDAO.findById(eventId);
+        if(eventById.isEmpty()){
+            throw new EventNotExistException("Event is not exist");
+        }
+        Optional<User> userById = userDAO.findById(userId);
+        List<User> list = eventById.get().getUser();
+        list.add(userById.get());
+
+        eventById.get().setUser(list);
+        eventDAO.save(eventById.get());
     }
 }

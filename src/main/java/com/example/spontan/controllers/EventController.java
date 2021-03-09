@@ -5,8 +5,6 @@ import com.example.spontan.dto.UserDTO;
 import com.example.spontan.exception.EventHaveNoUsersException;
 import com.example.spontan.service.EventService;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,4 +36,10 @@ public class EventController {
         return ResponseEntity.ok(usersFromEvent);
     }
 
+    @PostMapping(value = "/save/joinUserToEvent")
+    public ResponseEntity<String> joinUserToEvent(@RequestBody String json) throws JSONException {
+        EventDTO eventById = eventService.getEventById(json);
+        eventService.joinToEventByUser(json);
+        return ResponseEntity.ok("User joined to event name: " + eventById.getName());
+    }
 }

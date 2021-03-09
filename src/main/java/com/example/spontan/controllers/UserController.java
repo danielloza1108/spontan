@@ -70,5 +70,4 @@ public class UserController {
     public List<Map<String,String>> showSkills(@PathVariable String email) throws JSONException {
         return userService.getAllUserSkills(email);
     }
-
 }
