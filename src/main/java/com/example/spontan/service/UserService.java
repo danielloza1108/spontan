@@ -116,18 +116,28 @@ public class UserService {
         String category = jsonObject.getString("name");
         float rate = (float) jsonObject.getDouble("rate");
         String email = jsonObject.getString("email");
+        String addUserEmail = jsonObject.getString("addUserEmail");
         if(userDAO.findByEmail(email) == null){
             throw new UserIsNotInTheBaseException("User with this email is not in the database");
         }else if(categoryDAO.findCategoryByName(category) == null){
             throw new CategoryNotFoundException("Category with this name is not in the database");
         }
+        boolean byMyself;
+        if(userDAO.findByEmail(addUserEmail).getEmail().equals(userDAO.findByEmail(email).getEmail())){
+            byMyself = true;
+        }else{
+            byMyself = false;
+        }
         Skill skill = new Skill();
         skill.setCategory(categoryService.getCategoryByName(category));
         skill.setRate(rate);
+        skill.setUser(userDAO.findByEmail(email));
+        skill.setAddedByMyself(byMyself);
         skillService.addSkill(skill);
         User user = userDAO.findByEmail(email);
         List<Skill> skills = user.getSkills();
         skills.add(skill);
+
         user.setSkills(skills);
         userDAO.save(user);
 
