@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity(name = "appUser")
-public class User {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,15 +23,15 @@ public class User {
     private List<Event> createdEvent;
 
     @ManyToMany
-    private List<User> friends;
+    private List<AppUser> friends;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "appUser")
     private List<Skill> skills;
 
     @Override
     public boolean equals(Object o) {
-        return this == o || o instanceof User &&
-                Objects.equals(uuid, ((User) o).uuid);
+        return this == o || o instanceof AppUser &&
+                Objects.equals(uuid, ((AppUser) o).uuid);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class User {
         return Objects.hash(uuid);
     }
 
-    public User() {
+    public AppUser() {
     }
 
     public List<Event> getCreatedEvent() {
@@ -58,11 +58,11 @@ public class User {
         this.skills = skills;
     }
 
-    public List<User> getFriends() {
+    public List<AppUser> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(List<AppUser> friends) {
         this.friends = friends;
     }
 

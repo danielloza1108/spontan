@@ -4,10 +4,10 @@ import com.example.spontan.dto.CategoryDTO;
 import com.example.spontan.dto.EventDTO;
 import com.example.spontan.dto.SkillDTO;
 import com.example.spontan.dto.UserDTO;
+import com.example.spontan.entity.AppUser;
 import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Event;
 import com.example.spontan.entity.Skill;
-import com.example.spontan.entity.User;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.boot.SpringApplication;
@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.List;
 
 @SpringBootApplication
 @EnableWebSecurity
@@ -29,7 +27,7 @@ public class SpontanApplication {
     @Bean
     public ModelMapper getModelMapper() {
         ModelMapper modelMapper = new ModelMapper();
-        modelMapper.addMappings(new PropertyMap<User, UserDTO>() {
+        modelMapper.addMappings(new PropertyMap<AppUser, UserDTO>() {
             @Override
             protected void configure() {
                 map().setEmail(source.getEmail());

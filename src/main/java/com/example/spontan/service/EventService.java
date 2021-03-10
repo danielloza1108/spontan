@@ -6,9 +6,9 @@ import com.example.spontan.dao.UserDAO;
 import com.example.spontan.dto.CategoryDTO;
 import com.example.spontan.dto.EventDTO;
 import com.example.spontan.dto.UserDTO;
+import com.example.spontan.entity.AppUser;
 import com.example.spontan.entity.Category;
 import com.example.spontan.entity.Event;
-import com.example.spontan.entity.User;
 import com.example.spontan.exception.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,11 +138,11 @@ public class EventService {
         if (eventById.isEmpty()) {
             throw new EventNotExistException("Event is not exist");
         }
-        Optional<User> userById = userDAO.findById(userId);
-        List<User> list = eventById.get().getUser();
+        Optional<AppUser> userById = userDAO.findById(userId);
+        List<AppUser> list = eventById.get().getAppUser();
         list.add(userById.get());
 
-        eventById.get().setUser(list);
+        eventById.get().setAppUser(list);
         eventDAO.save(eventById.get());
     }
 
@@ -154,11 +154,11 @@ public class EventService {
         if (eventById.isEmpty()) {
             throw new EventNotExistException("Event is not exist");
         }
-        Optional<User> userById = userDAO.findById(userId);
+        Optional<AppUser> userById = userDAO.findById(userId);
         if (userById.isEmpty()) {
             throw new UserIsNotInTheBaseException("No user to delete");
         }
-        List<User> list = eventById.get().getUser();
+        List<AppUser> list = eventById.get().getAppUser();
         if (!isUserInEvent(userById.get().getId(), eventById.get())) {
           throw new UserIsNotInTheEventException("User is not in event");
         }
@@ -168,7 +168,7 @@ public class EventService {
 
     public boolean isUserInEvent(Long userId, Event event) throws EventHaveNoUsersException {
         List<UserDTO> userList = getUsersFromEvent(event.getId());
-        Optional<User> userById = userDAO.findById(userId);
+        Optional<AppUser> userById = userDAO.findById(userId);
         for (UserDTO userDTO : userList) {
             if (userDTO.getEmail().equals(userById.get().getEmail())) {
                 return true;

@@ -11,19 +11,19 @@ public class Skill {
     private Category category;
     private float rate;
     @ManyToOne
-    private User user;
+    private AppUser appUser;
     private boolean addedByMyself;
 
 
     public Skill() {
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getAppUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public boolean isAddedByMyself() {

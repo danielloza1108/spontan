@@ -9,6 +9,8 @@
       password: sakesake1
       initialization-mode: always
       continue-on-error: true
+      platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
     jpa:
       hibernate:
         ddl-auto: update

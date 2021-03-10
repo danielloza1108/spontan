@@ -35,7 +35,7 @@ public class Event {
     private Category category;
 
     @ManyToMany
-    private List<User> user;
+    private List<AppUser> appUser;
 
 
     public Event() {
@@ -59,12 +59,12 @@ public class Event {
     }
 
 
-    public List<User> getUser() {
-        return user;
+    public List<AppUser> getAppUser() {
+        return appUser;
     }
 
-    public void setUser(List<User> user) {
-        this.user = user;
+    public void setAppUser(List<AppUser> appUser) {
+        this.appUser = appUser;
     }
 
     public void setDurationOfTheEvent(LocalDateTime durationOfTheEvent) {
