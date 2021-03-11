@@ -38,34 +38,24 @@ public class EventService {
     }
 
     @Transactional
-    public void addEvent(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.setName(jsonObject.getString("name"));
-        eventDTO.setQuantityOfPlayers(jsonObject.getInt("quantityOfPlayers"));
-        eventDTO.setDurationOfTheEvent(parseStringToLocalDateTime(jsonObject.getString("durationOfTheEvent")));
-        eventDTO.setEventStart(parseStringToLocalDateTime(jsonObject.getString("eventStart")));
-        eventDTO.setEventPlace(jsonObject.getString("eventPlace"));
-        Category category = categoryDAO.findCategoryByName(jsonObject.getString("category"));
-        CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
-        Long userId = jsonObject.getLong("userId");
+    public void addEvent(EventDTO eventDTO) {
+        Category category = modelMapper.map(eventDTO.getCategoryDTO(),Category.class);
+        Event event = modelMapper.map(eventDTO,Event.class);
+        event.setCategory(category);
         List<Event> eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
-        Event event = modelMapper.map(eventDTO, Event.class);
         if (eventsByPlace != null) {
             eventsByPlace = eventDAO.findEventsByPlace(eventDTO.getEventPlace());
             for (Event event1 : eventsByPlace) {
                 checkEventCollides(event, event1);
             }
         }
-        if (categoryDAO.findCategoryByName(categoryDTO.getName()) == null) {
+        if (categoryDAO.findCategoryByName(event.getCategory().getName()) == null) {
             throw new CategoryNotFoundException("This category isn't exist");
         }
-        if (userDAO.getUserById(userId) == null) {
-            throw new UserIsNotInTheBaseException("User is not in the base");
-        }
-        event.setCategory(category);
+//        if (userDAO.getUserById(userId) == null) {
+//            throw new UserIsNotInTheBaseException("User is not in the base");
+//        }
         eventDAO.save(event);
-        userDAO.saveUserToCreatedEvent(userId, event.getId());
 
     }
 

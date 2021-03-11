@@ -34,7 +34,7 @@ public class SpontanApplication {
                 map().setName(source.getName());
             }
         });
-        modelMapper.addMappings(new PropertyMap<Event, EventDTO>() {
+        modelMapper.addMappings(new PropertyMap<EventDTO, Event>() {
             @Override
             protected void configure() {
                 map().setName(source.getName());
@@ -44,6 +44,12 @@ public class SpontanApplication {
             }
         });
         modelMapper.addMappings(new PropertyMap<Category, CategoryDTO>() {
+            @Override
+            protected void configure() {
+                map().setName(source.getName());
+            }
+        });
+        modelMapper.addMappings(new PropertyMap<CategoryDTO, Category>() {
             @Override
             protected void configure() {
                 map().setName(source.getName());

@@ -21,8 +21,8 @@ public class EventController {
     }
     //dodac kategorie
     @PostMapping("/add")
-    public ResponseEntity<String> addEvent(@RequestBody String json) throws JSONException {
-        eventService.addEvent(json);
+    public ResponseEntity<String> addEvent(@RequestBody EventDTO eventDTO) throws JSONException {
+        eventService.addEvent(eventDTO);
         return ResponseEntity.ok("Success");
     }
 

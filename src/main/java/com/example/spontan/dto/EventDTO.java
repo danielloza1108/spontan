@@ -13,6 +13,15 @@ public class EventDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Europe/Warsaw")
     private LocalDateTime durationOfTheEvent;
     private String eventPlace;
+    private CategoryDTO categoryDTO;
+
+    public CategoryDTO getCategoryDTO() {
+        return categoryDTO;
+    }
+
+    public void setCategoryDTO(CategoryDTO categoryDTO) {
+        this.categoryDTO = categoryDTO;
+    }
 
     public String getEventPlace() {
         return eventPlace;
