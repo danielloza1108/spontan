@@ -41,3 +41,20 @@
         ddl-auto: update
       properties:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+---
+  spring:
+    config:
+      activate:
+        on-profile: database
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://83-229-86-148.cloud-xip.io:3306/spontan?serverTimezone=Europe/Warsaw&allowPublicKeyRetrieval=true
+      username: root
+      password: Spontandanielrafal2021
+      initialization-mode: always
+      continue-on-error: true
+    jpa:
+      hibernate:
+        ddl-auto: update
+      properties:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
