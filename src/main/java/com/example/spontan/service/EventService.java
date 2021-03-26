@@ -38,7 +38,7 @@ public class EventService {
     }
 
     @Transactional
-    public void addEvent(EventDTO eventDTO) {
+    public Event addEvent(EventDTO eventDTO) {
         Category category = modelMapper.map(eventDTO.getCategoryDTO(),Category.class);
         Event event = modelMapper.map(eventDTO,Event.class);
         event.setCategory(category);
@@ -55,7 +55,7 @@ public class EventService {
 //        if (userDAO.getUserById(userId) == null) {
 //            throw new UserIsNotInTheBaseException("User is not in the base");
 //        }
-        eventDAO.save(event);
+        return eventDAO.save(event);
 
     }
 
