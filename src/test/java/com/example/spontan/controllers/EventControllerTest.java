@@ -46,7 +46,7 @@ class EventControllerTest {
                 .content(requestJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value(EVENT_NAME))
-                .andExpect(jsonPath("$.quantityOfPlayers").value(QUANTITY_OF_PLAYERS));
+                .andExpect(jsonPath("$.quantity").value(QUANTITY_OF_PLAYERS));
     }
 
     private Event getEvent() {
