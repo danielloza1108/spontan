@@ -24,14 +24,14 @@ public class EventController {
     }
     //dodac kategorie
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Event> addEvent(@RequestBody EventDTO eventDTO) throws JSONException {
+    public ResponseEntity<Event> addEvent(@RequestBody EventDTO eventDTO){
         Event event = eventService.addEvent(eventDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
     @GetMapping(value = "/get/{eventId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EventDTO> getEventById(@PathVariable String eventId) throws JSONException {
-        return ResponseEntity.status(HttpStatus.FOUND).body(eventService.getEventById(eventId));
+    public ResponseEntity<EventDTO> getEventById(@PathVariable Long eventId) throws JSONException {
+        return ResponseEntity.status(HttpStatus.FOUND).body(eventService.getEventById(String.valueOf(eventId)));
     }
 
     @GetMapping(value = "/getUserList/{eventId}")
@@ -50,6 +50,12 @@ public class EventController {
     @PostMapping(value = "/delete/user")
     public ResponseEntity<String> deleteUserFromEvent(@RequestBody String json) throws UserIsNotInTheEventException, JSONException, EventHaveNoUsersException {
         eventService.deleteUserFromEvent(json);
-        return ResponseEntity.ok("deleted");
+        return ResponseEntity.ok("deleted user from event!");
+    }
+
+    @DeleteMapping(value = "/delete/{eventId}")
+    public ResponseEntity<String> deleteEventById(@PathVariable Long eventId){
+        eventService.deleteEvent(eventId);
+        return ResponseEntity.ok("event deleted");
     }
 }

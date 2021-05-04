@@ -3,7 +3,6 @@ package com.example.spontan.service;
 import com.example.spontan.dao.CategoryDAO;
 import com.example.spontan.dao.EventDAO;
 import com.example.spontan.dao.UserDAO;
-import com.example.spontan.dto.CategoryDTO;
 import com.example.spontan.dto.EventDTO;
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.entity.AppUser;
@@ -59,10 +58,13 @@ public class EventService {
 
     }
 
-    public void deleteEvent(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        String eventName = jsonObject.getString("eventName");
-
+    public void deleteEvent(Long eventId) {
+        Event event = modelMapper.map(eventDAO.findById(eventId),Event.class);
+        if(event == null){
+            throw new EventNotExistException("This event isn't exist");
+        }else {
+            eventDAO.delete(event);
+        }
     }
 
     public EventDTO getEventById(String json) throws JSONException {
@@ -111,12 +113,6 @@ public class EventService {
         }
 
         return userDTOS;
-    }
-
-    public LocalDateTime parseStringToLocalDateTime(String string) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(string, formatter);
-        return dateTime;
     }
 
     @Transactional
