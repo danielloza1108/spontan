@@ -22,7 +22,7 @@ public class EventController {
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
-    //dodac kategorie
+
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Event> addEvent(@RequestBody EventDTO eventDTO){
         Event event = eventService.addEvent(eventDTO);
