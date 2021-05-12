@@ -1,13 +1,10 @@
 package com.example.spontan.dto;
 
-import org.springframework.data.web.JsonPath;
-
 public class UserDTO {
 
     private String name;
     private String email;
     private String password;
-
 
     public String getPassword() {
         return password;
