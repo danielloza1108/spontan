@@ -1,9 +1,9 @@
 package com.example.spontan.controllers;
 
-
 import com.example.spontan.dto.UserDTO;
 import com.example.spontan.service.UserService;
 import org.json.JSONException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,18 +45,18 @@ public class UserController {
     }
      */
     @GetMapping(value = "/get/{email}")
-    public UserDTO getUser(@PathVariable String email) {
-        return userService.getUserByEmail(email);
+    public ResponseEntity<UserDTO> getUser(@PathVariable String email) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(userService.getUserByEmail(email));
     }
 
     @GetMapping(value = "/getFriendsId/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Long> getFriends(@PathVariable String email) {
-        return userService.getFriendsId(email);
+    public ResponseEntity<List<Long>> getFriends(@PathVariable String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getFriendsId(email));
     }
 
     @GetMapping(value = "/getUserById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserDTO getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(userService.getUserById(id));
     }
 
     @PostMapping(value = "/addSkill")
@@ -66,12 +66,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/showSkills/{email}")
-    public List<Map<String, String>> showSkills(@PathVariable String email) throws JSONException {
-        return userService.getAllUserSkills(email);
+    public ResponseEntity<List<Map<String, String>>> showSkills(@PathVariable String email) throws JSONException {
+        return ResponseEntity.ok().body(userService.getAllUserSkills(email));
     }
 
     @GetMapping(value = "/showSkillsByUsers/{email}")
-    public List<Map<String, String>> showSkillsAddedByUsers(@PathVariable String email) throws JSONException {
-        return userService.getAllUserSkillsAddedByUsers(email);
+    public ResponseEntity<List<Map<String, String>>> showSkillsAddedByUsers(@PathVariable String email) throws JSONException {
+        return ResponseEntity.ok().body(userService.getAllUserSkillsAddedByUsers(email));
     }
 }
